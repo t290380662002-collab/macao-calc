@@ -6,44 +6,211 @@
     <title>澳門碼量計算機</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: #fff; }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; color: #ffd700; font-size: 2em; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
-        .subtitle { text-align: center; color: #aaa; margin-bottom: 30px; }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .card-title { font-size: 1.1em; color: #ffd700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        label { color: #aaa; font-size: 0.85em; }
-        input, select { padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; outline: none; transition: all 0.3s; }
-        input:focus, select:focus { border-color: #ffd700; background: rgba(255,215,0,0.1); }
-        input[type="number"] { font-size: 1.2em; text-align: right; }
-        .btn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s; width: 100%; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,215,0,0.4); }
-        .btn-reset { background: rgba(255,255,255,0.1); color: #fff; margin-top: 10px; }
-        .btn-reset:hover { background: rgba(255,255,255,0.2); }
-        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 20px; }
-        .result-card { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center; }
-        .result-label { color: #aaa; font-size: 0.9em; margin-bottom: 8px; }
-        .result-value { font-size: 1.8em; font-weight: bold; color: #ffd700; }
+        body { 
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+            min-height: 100vh; 
+            color: #fff; 
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { 
+            text-align: center; 
+            color: #ffd700; 
+            font-size: 2em; 
+            margin-bottom: 10px; 
+            text-shadow: 0 0 20px rgba(255,215,0,0.5); 
+        }
+        .subtitle { 
+            text-align: center; 
+            color: #aaa; 
+            margin-bottom: 30px; 
+        }
+        .card { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 16px; 
+            padding: 24px; 
+            margin-bottom: 20px; 
+            backdrop-filter: blur(10px); 
+        }
+        .card-title { 
+            font-size: 1.1em; 
+            color: #ffd700; 
+            margin-bottom: 16px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 16px; 
+        }
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6px; 
+        }
+        label { 
+            color: #aaa; 
+            font-size: 0.85em; 
+        }
+        input, select { 
+            padding: 12px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+            font-size: 1em; 
+            outline: none; 
+            transition: all 0.3s; 
+            width: 100%;
+        }
+        input:focus, select:focus { 
+            border-color: #ffd700; 
+            background: rgba(255,215,0,0.1); 
+        }
+        input[type="number"] { 
+            font-size: 1.2em; 
+            text-align: right; 
+        }
+        .btn { 
+            background: linear-gradient(135deg, #ffd700, #ff8c00); 
+            color: #1a1a2e; 
+            border: none; 
+            padding: 14px 28px; 
+            border-radius: 8px; 
+            font-size: 1em; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            width: 100%; 
+            margin-top: 10px;
+        }
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(255,215,0,0.4); 
+        }
+        .btn-reset { 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+        }
+        .btn-reset:hover { 
+            background: rgba(255,255,255,0.2); 
+        }
+        .result-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 16px; 
+            margin-top: 20px; 
+        }
+        .result-card { 
+            background: rgba(255,255,255,0.08); 
+            border-radius: 12px; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        .result-label { 
+            color: #aaa; 
+            font-size: 0.9em; 
+            margin-bottom: 8px; 
+        }
+        .result-value { 
+            font-size: 1.8em; 
+            font-weight: bold; 
+            color: #ffd700; 
+        }
         .result-value.negative { color: #ff6b6b; }
         .result-value.positive { color: #4ecdc4; }
-        .result-unit { font-size: 0.6em; color: #aaa; }
-        .formula { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-top: 16px; font-family: monospace; color: #aaa; font-size: 0.9em; }
-        .history-section { margin-top: 24px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        th { background: rgba(255,215,0,0.2); padding: 12px 8px; text-align: left; font-size: 0.85em; color: #ffd700; }
-        td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.9em; }
-        tr:hover { background: rgba(255,255,255,0.05); }
-        .hall-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .formula { 
+            background: rgba(0,0,0,0.3); 
+            border-radius: 8px; 
+            padding: 12px; 
+            margin-top: 16px; 
+            font-family: monospace; 
+            color: #aaa; 
+            font-size: 0.9em; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 12px; 
+        }
+        th { 
+            background: rgba(255,215,0,0.2); 
+            padding: 12px 8px; 
+            text-align: left; 
+            font-size: 0.85em; 
+            color: #ffd700; 
+        }
+        td { 
+            padding: 10px 8px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            font-size: 0.9em; 
+        }
+        tr:hover { 
+            background: rgba(255,255,255,0.05); 
+        }
+        .hall-tag { 
+            display: inline-block; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8em; 
+            font-weight: bold; 
+        }
         .hall-N { background: #3498db; color: #fff; }
         .hall-H { background: #9b59b6; color: #fff; }
-        .delete-btn { background: #e74c3c; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
-        .summary-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; padding: 16px; background: rgba(255,215,0,0.1); border-radius: 12px; }
-        .summary-item { flex: 1; min-width: 120px; text-align: center; }
-        .summary-value { font-size: 1.4em; font-weight: bold; color: #ffd700; }
-        .summary-label { font-size: 0.8em; color: #aaa; }
-        .section-title { font-size: 1em; color: #ffd700; margin: 24px 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .delete-btn { 
+            background: #e74c3c; 
+            color: #fff; 
+            border: none; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 0.8em; 
+        }
+        .summary-bar { 
+            display: flex; 
+            gap: 16px; 
+            flex-wrap: wrap; 
+            margin-top: 20px; 
+            padding: 16px; 
+            background: rgba(255,215,0,0.1); 
+            border-radius: 12px; 
+        }
+        .summary-item { 
+            flex: 1; 
+            min-width: 120px; 
+            text-align: center; 
+        }
+        .summary-value { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            color: #ffd700; 
+        }
+        .summary-label { 
+            font-size: 0.8em; 
+            color: #aaa; 
+        }
+        .section-title { 
+            font-size: 1em; 
+            color: #ffd700; 
+            margin: 24px 0 12px 0; 
+            padding-bottom: 8px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+        }
+        .history-section { 
+            margin-top: 24px; 
+        }
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -71,7 +238,7 @@
                 </div>
                 <div class="form-group">
                     <label>佔成 (%)</label>
-                    <input type="number" id="share" placeholder="90" value="90">
+                    <input type="number" id="share" placeholder="90" value="90" min="0" max="100">
                 </div>
             </div>
         </div>
@@ -81,15 +248,15 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>洗碼量 (HKD)</label>
-                    <input type="number" id="turnover" placeholder="10000" value="10000">
+                    <input type="number" id="turnover" placeholder="10000" value="10000" min="0">
                 </div>
                 <div class="form-group">
                     <label>輸 (HKD)</label>
-                    <input type="number" id="loss" placeholder="0" value="0">
+                    <input type="number" id="loss" placeholder="0" value="0" min="0">
                 </div>
                 <div class="form-group">
                     <label>贏 (HKD)</label>
-                    <input type="number" id="win" placeholder="0" value="0">
+                    <input type="number" id="win" placeholder="0" value="0" min="0">
                 </div>
             </div>
             <div class="formula" id="formula">
@@ -163,9 +330,21 @@
     <script>
         // 費率設定
         const RATES = { N: 2, H: 2.15 };
-        let history = JSON.parse(localStorage.getItem('macaoCalcHistory') || '[]');
+        let history = [];
+        
+        // 載入歷史記錄
+        try {
+            const saved = localStorage.getItem('macaoCalcHistory');
+            if (saved) {
+                history = JSON.parse(saved);
+            }
+        } catch(e) {
+            history = [];
+        }
 
-        function getRate(hall) { return RATES[hall] || 2; }
+        function getRate(hall) { 
+            return RATES[hall] || 2; 
+        }
 
         function calculate() {
             const date = document.getElementById('date').value;
@@ -176,8 +355,14 @@
             const loss = parseFloat(document.getElementById('loss').value) || 0;
             const win = parseFloat(document.getElementById('win').value) || 0;
 
-            if (!agent) { alert('請輸入代理名稱'); return; }
-            if (turnover <= 0) { alert('請輸入洗碼量'); return; }
+            if (!agent) { 
+                alert('請輸入代理名稱'); 
+                return; 
+            }
+            if (turnover <= 0) { 
+                alert('請輸入洗碼量'); 
+                return; 
+            }
 
             // 計算公式：洗碼 / 92 × 費率% × 2
             const rate = getRate(hall);
@@ -201,39 +386,67 @@
             netEl.className = 'result-value ' + (net >= 0 ? 'positive' : 'negative');
 
             // 保存記錄
-            const record = { date, hall, agent, share, turnover, companyCommission: companyRounded, agentCommission: agentCommission.toFixed(1), loss, win, net: net.toFixed(1) };
+            const record = { 
+                date: date, 
+                hall: hall, 
+                agent: agent, 
+                share: share, 
+                turnover: turnover, 
+                companyCommission: companyRounded, 
+                agentCommission: parseFloat(agentCommission.toFixed(1)), 
+                loss: loss, 
+                win: win, 
+                net: parseFloat(net.toFixed(1)) 
+            };
             history.push(record);
-            localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
+            
+            try {
+                localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
+            } catch(e) {
+                console.error('Failed to save to localStorage:', e);
+            }
+            
             renderHistory();
             updateSummary();
+            
+            // 滾動到結果區域
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
         function renderHistory() {
             const tbody = document.getElementById('historyBody');
-            tbody.innerHTML = history.map((r, i) => '
-                <tr>
-                    <td>' + r.date + '</td>
-                    <td><span class="hall-tag hall-' + r.hall + '">' + r.hall + '</span></td>
-                    <td>' + r.agent + '</td>
-                    <td>' + r.turnover.toLocaleString() + '</td>
-                    <td>' + r.companyCommission + '</td>
-                    <td>' + r.agentCommission + '</td>
-                    <td>' + r.loss.toLocaleString() + '</td>
-                    <td>' + r.win.toLocaleString() + '</td>
-                    <td style="color:' + (parseFloat(r.net) >= 0 ? '#4ecdc4' : '#ff6b6b') + '">' + r.net + '</td>
-                    <td><button class="delete-btn" onclick="deleteRecord(' + i + ')">刪</button></td>
-                </tr>
-            ').join('');
+            let html = '';
+            
+            for (let i = 0; i < history.length; i++) {
+                const r = history[i];
+                const netColor = parseFloat(r.net) >= 0 ? '#4ecdc4' : '#ff6b6b';
+                html += '<tr>' +
+                    '<td>' + (r.date || '-') + '</td>' +
+                    '<td><span class="hall-tag hall-' + r.hall + '">' + r.hall + '</span></td>' +
+                    '<td>' + (r.agent || '-') + '</td>' +
+                    '<td>' + (r.turnover ? r.turnover.toLocaleString() : '0') + '</td>' +
+                    '<td>' + (r.companyCommission !== undefined ? r.companyCommission : '0') + '</td>' +
+                    '<td>' + (r.agentCommission !== undefined ? r.agentCommission : '0') + '</td>' +
+                    '<td>' + (r.loss ? r.loss.toLocaleString() : '0') + '</td>' +
+                    '<td>' + (r.win ? r.win.toLocaleString() : '0') + '</td>' +
+                    '<td style="color:' + netColor + '">' + r.net + '</td>' +
+                    '<td><button class="delete-btn" onclick="deleteRecord(' + i + ')">刪</button></td>' +
+                    '</tr>';
+            }
+            
+            tbody.innerHTML = html;
         }
 
         function updateSummary() {
-            const totals = history.reduce((acc, r) => {
-                acc.turnover += r.turnover;
-                acc.commission += parseFloat(r.agentCommission);
-                acc.win += r.win;
-                acc.loss += r.loss;
-                return acc;
-            }, { turnover: 0, commission: 0, win: 0, loss: 0 });
+            const totals = { turnover: 0, commission: 0, win: 0, loss: 0 };
+            
+            for (let i = 0; i < history.length; i++) {
+                const r = history[i];
+                totals.turnover += (r.turnover || 0);
+                totals.commission += (r.agentCommission || 0);
+                totals.win += (r.win || 0);
+                totals.loss += (r.loss || 0);
+            }
 
             totals.net = totals.commission - totals.loss + totals.win;
 
@@ -249,10 +462,21 @@
         }
 
         function deleteRecord(index) {
-            history.splice(index, 1);
-            localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
-            renderHistory();
-            updateSummary();
+            if (confirm('確定要刪除這筆記錄嗎？')) {
+                history.splice(index, 1);
+                try {
+                    localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
+                } catch(e) {
+                    console.error('Failed to save to localStorage:', e);
+                }
+                renderHistory();
+                updateSummary();
+                
+                if (history.length === 0) {
+                    document.getElementById('results').style.display = 'none';
+                    document.getElementById('summaryBar').style.display = 'none';
+                }
+            }
         }
 
         function resetForm() {
@@ -264,9 +488,17 @@
         }
 
         // 初始化
-        document.getElementById('date').valueAsDate = new Date();
-        renderHistory();
-        if (history.length > 0) updateSummary();
+        window.onload = function() {
+            // 設定今天日期
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            
+            // 渲染歷史記錄
+            if (history.length > 0) {
+                renderHistory();
+                updateSummary();
+            }
+        };
     </script>
 </body>
 </html>
