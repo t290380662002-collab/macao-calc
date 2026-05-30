@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>澳門碼量計算機</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; color: #ffd700; font-size: 2em; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        .subtitle { text-align: center; color: #aaa; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .card-title { font-size: 1.1em; color: #ffd700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { color: #aaa; font-size: 0.85em; }
+        input, select { padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; outline: none; transition: all 0.3s; }
+        input:focus, select:focus { border-color: #ffd700; background: rgba(255,215,0,0.1); }
+        input[type="number"] { font-size: 1.2em; text-align: right; }
+        .btn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a2e; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s; width: 100%; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,215,0,0.4); }
+        .btn-reset { background: rgba(255,255,255,0.1); color: #fff; margin-top: 10px; }
+        .btn-reset:hover { background: rgba(255,255,255,0.2); }
+        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 20px; }
+        .result-card { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center; }
+        .result-label { color: #aaa; font-size: 0.9em; margin-bottom: 8px; }
+        .result-value { font-size: 1.8em; font-weight: bold; color: #ffd700; }
+        .result-value.negative { color: #ff6b6b; }
+        .result-value.positive { color: #4ecdc4; }
+        .result-unit { font-size: 0.6em; color: #aaa; }
+        .formula { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-top: 16px; font-family: monospace; color: #aaa; font-size: 0.9em; }
+        .history-section { margin-top: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th { background: rgba(255,215,0,0.2); padding: 12px 8px; text-align: left; font-size: 0.85em; color: #ffd700; }
+        td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.9em; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        .hall-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .hall-N { background: #3498db; color: #fff; }
+        .hall-H { background: #9b59b6; color: #fff; }
+        .delete-btn { background: #e74c3c; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+        .summary-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; padding: 16px; background: rgba(255,215,0,0.1); border-radius: 12px; }
+        .summary-item { flex: 1; min-width: 120px; text-align: center; }
+        .summary-value { font-size: 1.4em; font-weight: bold; color: #ffd700; }
+        .summary-label { font-size: 0.8em; color: #aaa; }
+        .section-title { font-size: 1em; color: #ffd700; margin: 24px 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 澳門碼量計算機</h1>
+        <p class="subtitle">N廳 & H廳 洗碼・碼糧・輸贏結算</p>
+
+        <div class="card">
+            <div class="card-title">📋 基本資料</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>日期</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="form-group">
+                    <label>廳別</label>
+                    <select id="hall">
+                        <option value="N">N 廳</option>
+                        <option value="H">H 廳</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>代理名稱</label>
+                    <input type="text" id="agent" placeholder="輸入代理名">
+                </div>
+                <div class="form-group">
+                    <label>佔成 (%)</label>
+                    <input type="number" id="share" placeholder="90" value="90">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💰 洗碼資料</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>洗碼量 (HKD)</label>
+                    <input type="number" id="turnover" placeholder="10000" value="10000">
+                </div>
+                <div class="form-group">
+                    <label>輸 (HKD)</label>
+                    <input type="number" id="loss" placeholder="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>贏 (HKD)</label>
+                    <input type="number" id="win" placeholder="0" value="0">
+                </div>
+            </div>
+            <div class="formula" id="formula">
+                📐 公式：洗碼 / 92 × 費率% × 2
+            </div>
+        </div>
+
+        <button class="btn" onclick="calculate()">計算碼糧</button>
+        <button class="btn btn-reset" onclick="resetForm()">清除資料</button>
+
+        <div class="result-grid" id="results" style="display:none;">
+            <div class="result-card">
+                <div class="result-label">公司碼糧</div>
+                <div class="result-value" id="companyResult">0</div>
+            </div>
+            <div class="result-card">
+                <div class="result-label">代理碼糧 (佔成<span id="shareDisplay">90</span>%)</div>
+                <div class="result-value" id="agentResult">0</div>
+            </div>
+            <div class="result-card">
+                <div class="result-label">淨結算</div>
+                <div class="result-value" id="netResult">0</div>
+            </div>
+        </div>
+
+        <div class="summary-bar" id="summaryBar" style="display:none;">
+            <div class="summary-item">
+                <div class="summary-value" id="totalTurnover">0</div>
+                <div class="summary-label">總洗碼</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="totalCommission">0</div>
+                <div class="summary-label">總碼糧</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="totalWin">0</div>
+                <div class="summary-label">總贏</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="totalLoss">0</div>
+                <div class="summary-label">總輸</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="totalNet">0</div>
+                <div class="summary-label">總淨結算</div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="section-title">📜 記錄列表</div>
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>廳</th>
+                        <th>代理</th>
+                        <th>洗碼</th>
+                        <th>公司碼糧</th>
+                        <th>代理碼糧</th>
+                        <th>輸</th>
+                        <th>贏</th>
+                        <th>淨結算</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 費率設定
+        const RATES = { N: 2, H: 2.15 };
+        let history = JSON.parse(localStorage.getItem('macaoCalcHistory') || '[]');
+
+        function getRate(hall) { return RATES[hall] || 2; }
+
+        function calculate() {
+            const date = document.getElementById('date').value;
+            const hall = document.getElementById('hall').value;
+            const agent = document.getElementById('agent').value.trim();
+            const share = parseFloat(document.getElementById('share').value) || 0;
+            const turnover = parseFloat(document.getElementById('turnover').value) || 0;
+            const loss = parseFloat(document.getElementById('loss').value) || 0;
+            const win = parseFloat(document.getElementById('win').value) || 0;
+
+            if (!agent) { alert('請輸入代理名稱'); return; }
+            if (turnover <= 0) { alert('請輸入洗碼量'); return; }
+
+            // 計算公式：洗碼 / 92 × 費率% × 2
+            const rate = getRate(hall);
+            const companyCommission = turnover / 92 * (rate / 100) * 2;
+            const companyRounded = Math.round(companyCommission * 10) / 10;
+            const agentCommission = companyRounded * (share / 100);
+            const net = agentCommission - loss + win;
+
+            // 顯示公式
+            document.getElementById('formula').innerHTML = 
+                '📐 公式：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × 2 = ' + companyRounded;
+
+            // 顯示結果
+            document.getElementById('results').style.display = 'grid';
+            document.getElementById('companyResult').textContent = companyRounded.toFixed(1);
+            document.getElementById('agentResult').textContent = agentCommission.toFixed(1);
+            document.getElementById('shareDisplay').textContent = share;
+            
+            const netEl = document.getElementById('netResult');
+            netEl.textContent = (net >= 0 ? '+' : '') + net.toFixed(1);
+            netEl.className = 'result-value ' + (net >= 0 ? 'positive' : 'negative');
+
+            // 保存記錄
+            const record = { date, hall, agent, share, turnover, companyCommission: companyRounded, agentCommission: agentCommission.toFixed(1), loss, win, net: net.toFixed(1) };
+            history.push(record);
+            localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
+            renderHistory();
+            updateSummary();
+        }
+
+        function renderHistory() {
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = history.map((r, i) => '
+                <tr>
+                    <td>' + r.date + '</td>
+                    <td><span class="hall-tag hall-' + r.hall + '">' + r.hall + '</span></td>
+                    <td>' + r.agent + '</td>
+                    <td>' + r.turnover.toLocaleString() + '</td>
+                    <td>' + r.companyCommission + '</td>
+                    <td>' + r.agentCommission + '</td>
+                    <td>' + r.loss.toLocaleString() + '</td>
+                    <td>' + r.win.toLocaleString() + '</td>
+                    <td style="color:' + (parseFloat(r.net) >= 0 ? '#4ecdc4' : '#ff6b6b') + '">' + r.net + '</td>
+                    <td><button class="delete-btn" onclick="deleteRecord(' + i + ')">刪</button></td>
+                </tr>
+            ').join('');
+        }
+
+        function updateSummary() {
+            const totals = history.reduce((acc, r) => {
+                acc.turnover += r.turnover;
+                acc.commission += parseFloat(r.agentCommission);
+                acc.win += r.win;
+                acc.loss += r.loss;
+                return acc;
+            }, { turnover: 0, commission: 0, win: 0, loss: 0 });
+
+            totals.net = totals.commission - totals.loss + totals.win;
+
+            document.getElementById('summaryBar').style.display = 'flex';
+            document.getElementById('totalTurnover').textContent = totals.turnover.toLocaleString();
+            document.getElementById('totalCommission').textContent = totals.commission.toFixed(1);
+            document.getElementById('totalWin').textContent = totals.win.toLocaleString();
+            document.getElementById('totalLoss').textContent = totals.loss.toLocaleString();
+            
+            const netEl = document.getElementById('totalNet');
+            netEl.textContent = (totals.net >= 0 ? '+' : '') + totals.net.toFixed(1);
+            netEl.style.color = totals.net >= 0 ? '#4ecdc4' : '#ff6b6b';
+        }
+
+        function deleteRecord(index) {
+            history.splice(index, 1);
+            localStorage.setItem('macaoCalcHistory', JSON.stringify(history));
+            renderHistory();
+            updateSummary();
+        }
+
+        function resetForm() {
+            document.getElementById('agent').value = '';
+            document.getElementById('turnover').value = '10000';
+            document.getElementById('loss').value = '0';
+            document.getElementById('win').value = '0';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // 初始化
+        document.getElementById('date').valueAsDate = new Date();
+        renderHistory();
+        if (history.length > 0) updateSummary();
+    </script>
+</body>
+</html>
