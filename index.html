@@ -278,6 +278,10 @@
                 <div class="result-value" id="agentResult">0</div>
             </div>
             <div class="result-card">
+                <div class="result-label">客人碼糧</div>
+                <div class="result-value" id="guestResult">0</div>
+            </div>
+            <div class="result-card">
                 <div class="result-label">淨結算</div>
                 <div class="result-value" id="netResult">0</div>
             </div>
@@ -365,21 +369,28 @@
                 return; 
             }
 
-            // 計算公式：洗碼 / 92 × 費率% × 2
+            // 計算公式：
+            // 公司碼糧 = 洗碼 / 92 × 費率% × 2
+            // 代理碼糧 = 洗碼 / 92 × 費率% × 佔成%
+            // 客人碼糧 = 洗碼 × 費率%
             const rate = getRate(hall);
             const companyCommission = turnover / 92 * (rate / 100) * 2;
             const companyRounded = Math.round(companyCommission * 10) / 10;
-            const agentCommission = companyRounded * (share / 100);
+            const agentCommission = turnover / 92 * (rate / 100) * (share / 100);
+            const guestCommission = turnover * (rate / 100);
             const net = agentCommission - loss + win;
 
             // 顯示公式
             document.getElementById('formula').innerHTML = 
-                '📐 公式：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × 2 = ' + companyRounded;
+                '📐 公司：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × 2 = ' + companyRounded + '<br>' +
+                '代理：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × ' + share + '% = ' + agentCommission.toFixed(1) + '<br>' +
+                '客人：' + turnover.toLocaleString() + ' × ' + rate + '% = ' + guestCommission.toFixed(1);
 
             // 顯示結果
             document.getElementById('results').style.display = 'grid';
             document.getElementById('companyResult').textContent = companyRounded.toFixed(1);
             document.getElementById('agentResult').textContent = agentCommission.toFixed(1);
+            document.getElementById('guestResult').textContent = guestCommission.toFixed(1);
             document.getElementById('shareDisplay').textContent = share;
             
             const netEl = document.getElementById('netResult');
@@ -395,6 +406,7 @@
                 turnover: turnover, 
                 companyCommission: companyRounded, 
                 agentCommission: parseFloat(agentCommission.toFixed(1)), 
+                guestCommission: parseFloat(guestCommission.toFixed(1)), 
                 loss: loss, 
                 win: win, 
                 net: parseFloat(net.toFixed(1)) 
