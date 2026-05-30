@@ -370,19 +370,20 @@
             }
 
             // 計算公式：
-            // 公司碼糧 = 洗碼 / 92 × 費率% × 2
-            // 代理碼糧 = 洗碼 / 92 × 費率% × 佔成%
+            // 代理碼糧 = 洗碼 / 92 × 佔成% × 2
+            // 公司碼糧 = 洗碼 / 92 × (92% - 佔成%) × 2
             // 客人碼糧 = 洗碼 × 費率%
             const rate = getRate(hall);
-            const companyCommission = Math.round(turnover / 92 * (rate / 100) * 2);
-            const agentCommission = Math.round(turnover / 92 * (rate / 100) * share);
+            const agentCommission = Math.round(turnover / 92 * (share / 100) * 2);
+            const companyPercent = 92 - share;
+            const companyCommission = Math.round(turnover / 92 * (companyPercent / 100) * 2);
             const guestCommission = turnover * (rate / 100);
             const net = agentCommission - loss + win;
 
             // 顯示公式
             document.getElementById('formula').innerHTML = 
-                '📐 公司：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × 2 = ' + companyCommission + '<br>' +
-                '代理：' + turnover.toLocaleString() + ' / 92 × ' + rate + '% × ' + share + '% = ' + agentCommission.toLocaleString() + '<br>' +
+                '📐 代理：' + turnover.toLocaleString() + ' / 92 × ' + share + '% × 2 = ' + agentCommission.toLocaleString() + '<br>' +
+                '公司：' + turnover.toLocaleString() + ' / 92 × ' + companyPercent + '% × 2 = ' + companyCommission.toLocaleString() + '<br>' +
                 '客人：' + turnover.toLocaleString() + ' × ' + rate + '% = ' + guestCommission.toLocaleString();
 
             // 顯示結果
